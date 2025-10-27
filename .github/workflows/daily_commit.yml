@@ -1,0 +1,35 @@
+name: Daily Commit Action
+
+on:
+  # Schedule to run once per day at 5:10 AM UTC
+  schedule:
+    - cron: '10 5 * * *'
+
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Email step (for quiz requirement)
+      - name: Step including email 24f2004709@ds.study.iitm.ac.in
+        run: echo "This step is just for the quiz requirement."
+
+      # Step 3: Create and push a daily commit
+      - name: Create a daily commit
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          echo "Last run: $(date)" > last_run.txt
+          git add last_run.txt
+          git commit -m "Automated daily update [skip ci]" || echo "No changes to commit"
+          git push
